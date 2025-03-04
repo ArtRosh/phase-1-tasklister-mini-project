@@ -1,33 +1,36 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("create-task-form");
+  const taskList = document.getElementById("tasks");
 
   form.addEventListener("submit", function(event) {
     event.preventDefault();
 
-    // Create new task item
+    // Получаем значение из input
+    const taskText = document.getElementById("new-task-description").value.trim();
+    if (taskText === "") return; // Не добавлять пустую задачу
+
+    // Создаем новый элемент задачи
     const task = document.createElement("li");
-    task.innerHTML = document.getElementById("new-task-description").value;
+    task.textContent = taskText;
+    task.classList.add("task-item"); // Добавляем класс для стилизации
 
-    // Create delete button
+    // Создаем кнопку удаления
     const deleteButton = document.createElement("button");
-    deleteButton.innerHTML = "✖"; // Make sure it's visible
-    deleteButton.style.marginLeft = "10px";
-    deleteButton.style.border = "1px solid black";
-    deleteButton.style.background = "white";
-    deleteButton.style.color = "black";
-    deleteButton.style.cursor = "pointer";
-    deleteButton.style.padding = "2px 5px";
+    deleteButton.textContent = "✖";
+    deleteButton.classList.add("delete-btn"); // Класс для удобства
 
-    // Append delete button to task
+    // Добавляем кнопку в задачу
     task.appendChild(deleteButton);
-    document.getElementById("tasks").appendChild(task);
+    taskList.appendChild(task);
 
-    // Add event listener to delete button
-    deleteButton.addEventListener("click", function(event) {
-      event.target.parentElement.remove();
-    });
-
-    // Clear input field
+    // Очищаем поле ввода
     event.target.reset();
+  });
+
+  // Используем делегирование событий (чтобы не вешать обработчик на каждую кнопку)
+  taskList.addEventListener("click", function(event) {
+    if (event.target.classList.contains("delete-btn")) {
+      event.target.parentElement.remove();
+    }
   });
 });
